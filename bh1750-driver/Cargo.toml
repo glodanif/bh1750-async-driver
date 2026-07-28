@@ -1,0 +1,16 @@
+[package]
+name = "bh1750-driver"
+version = "0.1.0"
+edition = "2024"
+keywords = ["bh1750", "embedded-hal-async", "sensor", "no-std", "driver"]
+categories = ["embedded", "hardware-support", "no-std"]
+
+[dependencies]
+embedded-hal-async = "1.0.0"
+defmt = { version = "1.1.1", optional = true }
+
+[dev-dependencies]
+embedded-hal-mock = { version = "0.11.1", features = ["eh1", "embedded-hal-async"] }
+
+[features]
+defmt = ["dep:defmt"]
