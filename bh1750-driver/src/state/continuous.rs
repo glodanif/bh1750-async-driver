@@ -1,15 +1,15 @@
-use crate::parameters::ResolutionSpec;
 use crate::sensor_data::SensorData;
 use crate::state::can_power_down::CanPowerDown;
 use crate::{Bh1750Device, Error};
 use embedded_hal_async::delay::DelayNs;
 use embedded_hal_async::i2c::I2c;
 use crate::command::Command;
+use crate::config::Config;
 use crate::state::sealed::Sealed;
 
 /// Continuous measurement state
 pub struct Continuous {
-    pub(crate) spec: ResolutionSpec,
+    pub(crate) config: Config,
 }
 
 impl Sealed for Continuous {}
@@ -34,7 +34,8 @@ where
             .map_err(Error::Bus)?;
         Ok(SensorData::from_be_bytes(
             data_out,
-            self.state.spec.lux_scale,
+            self.state.config.mt_reg,
+            self.state.config.spec().lux_scale,
         ))
     }
 

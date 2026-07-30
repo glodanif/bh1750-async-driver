@@ -1,4 +1,5 @@
-use crate::parameters::{Mode, ResolutionSpec};
+use crate::config::Config;
+use crate::parameters::Mode;
 use crate::sensor_data::SensorData;
 use crate::state::can_power_down::CanPowerDown;
 use crate::state::sealed::Sealed;
@@ -8,7 +9,7 @@ use embedded_hal_async::i2c::I2c;
 
 /// One-shot measurement state
 pub struct OneShot {
-    pub(crate) spec: ResolutionSpec,
+    pub(crate) config: Config,
 }
 
 impl Sealed for OneShot {}
@@ -26,7 +27,7 @@ where
     /// Returns [Error::Bus] if writing the one-shot measurement command or
     /// reading the measurement result back over I2C fails
     pub async fn measure(&mut self) -> Result<SensorData, Error<T::Error>> {
-        let spec = self.state.spec;
+        let spec = self.state.config.spec();
         let mode = (Mode::OneShot as u8) << 4 | spec.bits;
         self.i2c_bus
             .write(self.address, &[mode])
@@ -40,7 +41,8 @@ where
             .map_err(Error::Bus)?;
         Ok(SensorData::from_be_bytes(
             data_out,
-            self.state.spec.lux_scale,
+            self.state.config.mt_reg,
+            spec.lux_scale,
         ))
     }
 }

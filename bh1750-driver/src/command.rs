@@ -4,6 +4,8 @@ pub(crate) enum Command {
     PowerDown = 0x00,
     PowerOn = 0x01,
     Reset = 0x07,
+    MeasurementTimeHi = 0x40,
+    MeasurementTimeLo = 0x60,
 }
 
 impl Command {

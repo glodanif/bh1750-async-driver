@@ -73,8 +73,10 @@ mod command;
 mod parameters;
 mod sensor_data;
 mod state;
+mod config;
 
 pub use crate::parameters::Resolution;
+pub use crate::config::Config;
 pub use crate::sensor_data::SensorData;
 pub use crate::state::{Continuous, OneShot, PoweredDown, PoweredOn, Uninitialized};
 

@@ -6,20 +6,22 @@ use crate::COUNTS_PER_LUX;
 pub struct SensorData {
     /// Raw output from the sensor
     pub raw_output: u16,
+    pub(crate) mt_reg: u8,
     pub(crate) lux_scale: f32,
 }
 
 impl SensorData {
-    pub(crate) fn from_be_bytes(bytes: [u8; 2], lux_scale: f32) -> Self {
+    pub(crate) fn from_be_bytes(bytes: [u8; 2], mt_reg: u8, lux_scale: f32) -> Self {
         Self {
             raw_output: u16::from_be_bytes(bytes),
+            mt_reg,
             lux_scale,
         }
     }
 
     /// Returns the light intensity in lux
     pub fn light_intensity_lux(&self) -> f32 {
-        self.raw_output as f32 / COUNTS_PER_LUX * self.lux_scale
+        self.raw_output as f32 / COUNTS_PER_LUX * self.lux_scale * 69.0 / self.mt_reg as f32
     }
 }
 
@@ -29,6 +31,7 @@ mod tests {
 
     const DATA: SensorData = SensorData {
         raw_output: 1000,
+        mt_reg: 69,
         lux_scale: 1.5,
     };
 
