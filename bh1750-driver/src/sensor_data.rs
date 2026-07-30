@@ -1,4 +1,6 @@
+#[cfg(feature = "lux")]
 use crate::COUNTS_PER_LUX;
+use crate::DEFAULT_MT_REG;
 
 /// Represents the light intensity data from the sensor
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -6,7 +8,8 @@ use crate::COUNTS_PER_LUX;
 pub struct SensorData {
     /// Raw output from the sensor
     pub raw_output: u16,
-    pub(crate) mt_reg: u8,
+    /// Measurement Time Register (MT_REG)
+    pub mt_reg: u8,
     pub(crate) lux_scale: f32,
 }
 
@@ -19,13 +22,15 @@ impl SensorData {
         }
     }
 
+    #[cfg(feature = "lux")]
     /// Returns the light intensity in lux
     pub fn light_intensity_lux(&self) -> f32 {
-        self.raw_output as f32 / COUNTS_PER_LUX * self.lux_scale * 69.0 / self.mt_reg as f32
+        self.raw_output as f32 / COUNTS_PER_LUX * self.lux_scale * DEFAULT_MT_REG as f32
+            / self.mt_reg as f32
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, feature = "lux"))]
 mod tests {
     use super::*;
 

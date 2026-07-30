@@ -1,14 +1,17 @@
 use crate::parameters::ResolutionSpec;
 use crate::Resolution;
 
+/// Default Measurement Time Register (MT_REG)
 pub const DEFAULT_MT_REG: u8 = 69;
 
+/// Configuration for the sensor
 pub struct Config {
     resolution: Resolution,
     pub(crate) mt_reg: u8,
 }
 
 impl Config {
+    /// Create a new configuration from a resolution
     pub fn new(resolution: Resolution) -> Self {
         Self {
             resolution,
@@ -16,6 +19,7 @@ impl Config {
         }
     }
 
+    /// Set the Measurement Time Register (MT_REG)
     pub fn with_mt_reg(mut self, mt_reg: u8) -> Self {
         debug_assert!(
             (31..=254).contains(&mt_reg),

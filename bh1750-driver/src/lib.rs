@@ -27,7 +27,7 @@
 //! ### Continuous mode example
 //!
 //! ```no_run
-//! # use bh1750_driver::{Address, Bh1750Device, Resolution};
+//! # use bh1750_driver::{Address, Bh1750Device, Resolution, Config};
 //! # use embedded_hal_mock::eh1::i2c::Mock as I2c;
 //! # use embedded_hal_mock::eh1::delay::NoopDelay as Delay;
 //! # async fn example() {
@@ -38,7 +38,7 @@
 //!     .power_on()
 //!     .await
 //!     .unwrap()
-//!     .into_continuous(Resolution::High)
+//!     .into_continuous(Config::new(Resolution::High))
 //!     .await
 //!     .unwrap();
 //! let data = bh1750.read().await.unwrap();
@@ -49,7 +49,7 @@
 //! ### One-shot mode example
 //!
 //! ```no_run
-//! # use bh1750_driver::{Address, Bh1750Device, Resolution};
+//! # use bh1750_driver::{Address, Bh1750Device, Config, Resolution};
 //! # use embedded_hal_mock::eh1::i2c::Mock as I2c;
 //! # use embedded_hal_mock::eh1::delay::NoopDelay as Delay;
 //! # async fn example() {
@@ -60,7 +60,9 @@
 //!     .power_on()
 //!     .await
 //!     .unwrap()
-//!     .into_one_shot(Resolution::High);
+//!     .into_one_shot(Config::new(Resolution::High2).with_mt_reg(200))
+//!     .await
+//!     .unwrap();
 //! let data = bh1750.measure().await.unwrap();
 //! # }
 //! ```
@@ -76,7 +78,7 @@ mod state;
 mod config;
 
 pub use crate::parameters::Resolution;
-pub use crate::config::Config;
+pub use crate::config::{Config, DEFAULT_MT_REG};
 pub use crate::sensor_data::SensorData;
 pub use crate::state::{Continuous, OneShot, PoweredDown, PoweredOn, Uninitialized};
 

@@ -1,9 +1,9 @@
 #![no_std]
 #![no_main]
 
-use bh1750_driver::{Address, Bh1750Device, Config as Bh1750Config, Resolution};
+use bh1750_driver::{Address, Bh1750Device, Config, Resolution};
 use embassy_executor::Spawner;
-use embassy_nrf::twim::{Config, InterruptHandler, Twim};
+use embassy_nrf::twim::{Config as TwimConfig, InterruptHandler, Twim};
 use embassy_nrf::{bind_interrupts, peripherals};
 use embassy_time::{Delay, Timer};
 #[allow(unused)]
@@ -19,7 +19,7 @@ async fn main(_spawner: Spawner) -> ! {
         Irqs,
         peri.P0_26,
         peri.P0_27,
-        Config::default(),
+        TwimConfig::default(),
         &mut rx_ram_buffer,
     );
 
@@ -28,7 +28,7 @@ async fn main(_spawner: Spawner) -> ! {
         .power_on()
         .await
         .expect("Failed to power on bh1750")
-        .into_continuous(Bh1750Config::new(Resolution::High2).with_mt_reg(69))
+        .into_continuous(Config::new(Resolution::High2).with_mt_reg(69))
         .await
         .expect("Failed to start continuous bh1750");
 
