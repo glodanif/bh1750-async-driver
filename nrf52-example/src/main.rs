@@ -28,7 +28,7 @@ async fn main(_spawner: Spawner) -> ! {
         .power_on()
         .await
         .expect("Failed to power on bh1750")
-        .into_continuous(Config::new(Resolution::High2).with_mt_reg(201))
+        .into_continuous(Config::new(Resolution::High2))
         .await
         .expect("Failed to start continuous bh1750");
 

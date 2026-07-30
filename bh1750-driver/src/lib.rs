@@ -61,7 +61,7 @@
 //!     .power_on()
 //!     .await
 //!     .unwrap()
-//!     .into_one_shot(Config::new(Resolution::High2).with_mt_reg(200))
+//!     .into_one_shot(Config::new(Resolution::High2).with_mt_reg(70))
 //!     .await
 //!     .unwrap();
 //! let data = bh1750.measure().await.unwrap();
