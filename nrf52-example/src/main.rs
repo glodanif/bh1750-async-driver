@@ -28,7 +28,7 @@ async fn main(_spawner: Spawner) -> ! {
         .power_on()
         .await
         .expect("Failed to power on bh1750")
-        .into_continuous(Config::new(Resolution::High2).with_mt_reg(69))
+        .into_continuous(Config::new(Resolution::High2).with_mt_reg(201))
         .await
         .expect("Failed to start continuous bh1750");
 
@@ -39,7 +39,12 @@ async fn main(_spawner: Spawner) -> ! {
         let sensor_data = bh1750.read().await;
         match sensor_data {
             Ok(data) => {
-                defmt::info!("BH1750 read: LI {}lx", data.light_intensity_lux(),);
+                defmt::info!(
+                    "BH1750 read: LI {}lx (raw: {}, mt_reg: {})",
+                    data.light_intensity_lux(),
+                    data.raw_output,
+                    data.mt_reg
+                );
             }
             Err(e) => {
                 defmt::error!("Failed to read BH1750: {}", e);

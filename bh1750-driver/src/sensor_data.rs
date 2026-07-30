@@ -1,6 +1,5 @@
 #[cfg(feature = "lux")]
-use crate::COUNTS_PER_LUX;
-use crate::DEFAULT_MT_REG;
+use crate::{COUNTS_PER_LUX, DEFAULT_MT_REG};
 
 /// Represents the light intensity data from the sensor
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -27,6 +26,21 @@ impl SensorData {
     pub fn light_intensity_lux(&self) -> f32 {
         self.raw_output as f32 / COUNTS_PER_LUX * self.lux_scale * DEFAULT_MT_REG as f32
             / self.mt_reg as f32
+    }
+
+    /// Returns `true` when the raw count is pinned at the sensor's 16-bit
+    /// maximum (65_535).
+    ///
+    /// This usually means the light level exceeded the measurable range and the
+    /// reading is clipped — so the true light was *higher* than reported, and both
+    /// [`raw_output`](Self::raw_output) and the lux value read *lower* than reality.
+    ///
+    /// It cannot distinguish a genuine max-value reading from a clipped one, so a
+    /// `true` result is a "may be unreliable" hint, not a guarantee of overflow.
+    /// To bring a saturated reading back into range, lower the measurement time
+    /// (`mt_reg`) and/or use a coarser [`Resolution`](crate::Resolution).
+    pub fn is_saturated(&self) -> bool {
+        self.raw_output == u16::MAX
     }
 }
 

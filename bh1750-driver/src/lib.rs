@@ -42,6 +42,7 @@
 //!     .await
 //!     .unwrap();
 //! let data = bh1750.read().await.unwrap();
+//! # #[cfg(feature = "lux")]
 //! let lux = data.light_intensity_lux();
 //! # }
 //! ```

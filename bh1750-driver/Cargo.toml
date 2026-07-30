@@ -1,6 +1,6 @@
 [package]
 name = "bh1750-driver"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 keywords = ["bh1750", "embedded-hal-async", "sensor", "no-std", "driver"]
 categories = ["embedded", "hardware-support", "no-std"]
